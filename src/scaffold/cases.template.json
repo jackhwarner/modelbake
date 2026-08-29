@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "cases": [
+    {
+      "id": "example-plain-answer",
+      "category": "conversation",
+      "systemVariant": "default",
+      "messages": [
+        { "role": "user", "content": "TODO: replace with a real request your users actually make, where the right behaviour is to answer without touching a tool." }
+      ],
+      "assertions": [
+        { "type": "no_tool" },
+        { "type": "max_words", "value": 60 }
+      ]
+    },
+    {
+      "id": "example-tool-call",
+      "category": "tools",
+      "systemVariant": "default",
+      "messages": [
+        { "role": "user", "content": "TODO: replace with a real request where exactly one specific tool must fire." }
+      ],
+      "assertions": [
+        { "type": "tool_called", "tool": "TODO_replace_with_a_real_tool_name" }
+      ]
+    }
+  ]
+}

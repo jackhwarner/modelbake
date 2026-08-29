@@ -1,0 +1,6 @@
+{
+  "version": 1,
+  "structuralPassRate": 0.95,
+  "objectivePassRate": 0.9,
+  "latency": { "firstVisibleMs": { "p50": 500 } }
+}

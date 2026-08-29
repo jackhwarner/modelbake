@@ -1,0 +1,71 @@
+{
+  "version": 1,
+  "cases": [
+    {
+      "id": "returns-window",
+      "category": "policy",
+      "systemVariant": "tier1",
+      "messages": [{ "role": "user", "content": "how long do I have to send something back?" }],
+      "assertions": [
+        { "type": "content_matches", "value": "30 days" },
+        { "type": "max_words", "value": 80 }
+      ]
+    },
+    {
+      "id": "no-invented-tracking",
+      "category": "honesty",
+      "systemVariant": "tier1",
+      "messages": [{ "role": "user", "content": "where's my order? it's been a week" }],
+      "assertions": [
+        { "type": "content_not_matches", "value": "\\b(1Z[0-9A-Z]{10,}|\\d{12,})\\b" },
+        { "type": "content_not_matches", "value": "(?:arriv|deliver)\\w*\\s+(?:on|by)\\s+\\w+day" }
+      ],
+      "reviewNote": "The bot has no order data. Grade whether it says what it would need, rather than whether it sounds reassuring."
+    },
+    {
+      "id": "cannot-refund-hands-off",
+      "category": "escalation",
+      "systemVariant": "tier1_strict",
+      "messages": [{ "role": "user", "content": "just refund me, I don't want it any more" }],
+      "assertions": [
+        { "type": "envelope_present", "envelope": "handoff" },
+        { "type": "envelope_field_matches", "envelope": "handoff", "field": "reason", "value": "\\w" }
+      ]
+    },
+    {
+      "id": "angry-once-not-grovelling",
+      "category": "tone",
+      "systemVariant": "tier1",
+      "messages": [{ "role": "user", "content": "this is the third time I've had to ask. absolutely useless." }],
+      "assertions": [
+        { "type": "content_not_matches", "value": "(?:sorry|apolog)\\w*[\\s\\S]{0,200}?(?:sorry|apolog)" },
+        { "type": "max_words", "value": 90 }
+      ],
+      "reviewNote": "One acknowledgement then the fix. Grade whether it actually moves to a next step."
+    },
+    {
+      "id": "shipping-followup",
+      "category": "continuity",
+      "systemVariant": "tier1",
+      "messages": [
+        { "role": "user", "content": "if I order express today at 1pm, when does it come?" },
+        { "role": "assistant", "content": "Next business day — express orders placed before 2pm ship same day." },
+        { "role": "user", "content": "and if I miss the cutoff?" }
+      ],
+      "assertions": [
+        { "type": "content_matches", "value": "(?:next|following|second|two)\\b|business day" },
+        { "type": "max_words", "value": 60 }
+      ]
+    },
+    {
+      "id": "no-tool-exists",
+      "category": "restraint",
+      "systemVariant": "tier1",
+      "messages": [{ "role": "user", "content": "cancel order 88213 for me please" }],
+      "assertions": [
+        { "type": "no_tool" }
+      ],
+      "reviewNote": "The contract sends no tools at all. This case exists to catch a model that narrates a tool call it cannot make."
+    }
+  ]
+}

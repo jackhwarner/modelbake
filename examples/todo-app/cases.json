@@ -1,0 +1,288 @@
+{
+  "version": 1,
+  "cases": [
+    {
+      "id": "greeting",
+      "category": "conversation",
+      "systemVariant": "voice",
+      "messages": [
+        {
+          "role": "user",
+          "content": "hey, morning"
+        }
+      ],
+      "assertions": [
+        {
+          "type": "no_tool"
+        },
+        {
+          "type": "max_words",
+          "value": 25
+        }
+      ]
+    },
+    {
+      "id": "arithmetic-no-tool",
+      "category": "conversation",
+      "systemVariant": "voice",
+      "messages": [
+        {
+          "role": "user",
+          "content": "what's twelve times twelve?"
+        }
+      ],
+      "assertions": [
+        {
+          "type": "no_tool"
+        },
+        {
+          "type": "content_matches",
+          "value": "\\b144\\b"
+        },
+        {
+          "type": "max_words",
+          "value": 15
+        }
+      ]
+    },
+    {
+      "id": "add-item",
+      "category": "tools",
+      "systemVariant": "voice",
+      "messages": [
+        {
+          "role": "user",
+          "content": "add milk to my list"
+        }
+      ],
+      "assertions": [
+        {
+          "type": "tool_called",
+          "tool": "add_todo"
+        },
+        {
+          "type": "tool_argument_matches",
+          "tool": "add_todo",
+          "key": "title",
+          "value": "milk"
+        },
+        {
+          "type": "tool_not_called",
+          "tool": "list_todos"
+        }
+      ]
+    },
+    {
+      "id": "list-items",
+      "category": "tools",
+      "systemVariant": "voice",
+      "messages": [
+        {
+          "role": "user",
+          "content": "what's left on my list?"
+        }
+      ],
+      "assertions": [
+        {
+          "type": "tool_called",
+          "tool": "list_todos"
+        }
+      ]
+    },
+    {
+      "id": "advice-is-not-a-write",
+      "category": "restraint",
+      "systemVariant": "text",
+      "messages": [
+        {
+          "role": "user",
+          "content": "what's a good way to organise a todo list so it doesn't get out of hand?"
+        }
+      ],
+      "assertions": [
+        {
+          "type": "tool_not_called",
+          "tool": "add_todo"
+        },
+        {
+          "type": "tool_not_called",
+          "tool": "complete_todo"
+        }
+      ],
+      "reviewNote": "Grade whether the advice is worth reading, not whether it is long."
+    },
+    {
+      "id": "complete-needs-lookup",
+      "category": "restraint",
+      "systemVariant": "voice",
+      "messages": [
+        {
+          "role": "user",
+          "content": "mark the milk one done"
+        }
+      ],
+      "assertions": [
+        {
+          "type": "tool_called",
+          "tool": "list_todos"
+        },
+        {
+          "type": "tool_not_called",
+          "tool": "complete_todo"
+        }
+      ],
+      "reviewNote": "The model has no id for 'the milk one'. Completing something on a guessed id is the failure this case exists to catch."
+    },
+    {
+      "id": "continuity-second-item",
+      "category": "continuity",
+      "systemVariant": "voice",
+      "messages": [
+        {
+          "role": "user",
+          "content": "what's left on my list?"
+        },
+        {
+          "role": "assistant",
+          "content": "",
+          "tool_calls": [
+            {
+              "id": "call_list_1",
+              "type": "function",
+              "function": {
+                "name": "list_todos",
+                "arguments": "{\"filter\":\"open\"}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "tool_call_id": "call_list_1",
+          "name": "list_todos",
+          "content": "{\"todos\":[{\"id\":41,\"title\":\"Buy milk\",\"done\":false},{\"id\":52,\"title\":\"Book dentist\",\"done\":false}]}"
+        },
+        {
+          "role": "assistant",
+          "content": "Milk and the dentist."
+        },
+        {
+          "role": "user",
+          "content": "the second one is done"
+        }
+      ],
+      "assertions": [
+        {
+          "type": "tool_called",
+          "tool": "complete_todo"
+        },
+        {
+          "type": "tool_argument",
+          "tool": "complete_todo",
+          "key": "id",
+          "value": 52
+        }
+      ]
+    },
+    {
+      "id": "live-data-goes-to-search",
+      "category": "tools",
+      "systemVariant": "voice",
+      "messages": [
+        {
+          "role": "user",
+          "content": "is the hardware store open right now?"
+        }
+      ],
+      "assertions": [
+        {
+          "type": "tool_called",
+          "tool": "search_web"
+        }
+      ]
+    },
+    {
+      "id": "summary-card-envelope",
+      "category": "envelope",
+      "systemVariant": "text",
+      "messages": [
+        {
+          "role": "user",
+          "content": "what did I finish this week?"
+        },
+        {
+          "role": "assistant",
+          "content": "",
+          "tool_calls": [
+            {
+              "id": "call_list_2",
+              "type": "function",
+              "function": {
+                "name": "list_todos",
+                "arguments": "{\"filter\":\"done\"}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "tool_call_id": "call_list_2",
+          "name": "list_todos",
+          "content": "{\"todos\":[{\"id\":12,\"title\":\"File taxes\",\"done\":true,\"completed_at\":\"2026-08-24\"},{\"id\":19,\"title\":\"Fix the gate\",\"done\":true,\"completed_at\":\"2026-08-26\"},{\"id\":23,\"title\":\"Call the bank\",\"done\":true,\"completed_at\":\"2026-08-27\"}]}"
+        },
+        {
+          "role": "assistant",
+          "content": "Taxes, the gate, and the bank."
+        },
+        {
+          "role": "user",
+          "content": "put that in a card for me"
+        }
+      ],
+      "assertions": [
+        {
+          "type": "envelope_present",
+          "envelope": "card"
+        },
+        {
+          "type": "envelope_field_matches",
+          "envelope": "card",
+          "field": "attrs.title",
+          "value": ".+"
+        },
+        {
+          "type": "envelope_max_words",
+          "envelope": "card",
+          "field": "lead",
+          "value": 20
+        },
+        {
+          "type": "tool_not_called",
+          "tool": "list_todos"
+        }
+      ],
+      "reviewNote": "The data is already in the history. Grade what the card chose to show, and whether re-fetching was correctly avoided."
+    },
+    {
+      "id": "no-invented-item",
+      "category": "restraint",
+      "systemVariant": "voice",
+      "messages": [
+        {
+          "role": "user",
+          "content": "did I already add something about the car?"
+        }
+      ],
+      "assertions": [
+        {
+          "type": "tool_called",
+          "tool": "list_todos"
+        },
+        {
+          "type": "tool_not_called",
+          "tool": "add_todo"
+        }
+      ]
+    }
+  ]
+}

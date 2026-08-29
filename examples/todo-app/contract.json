@@ -1,0 +1,95 @@
+{
+  "version": 1,
+  "name": "toy-todo-app",
+
+  "systemVariants": {
+    "text": "You are the assistant inside a todo app. You can read and change the user's list through the tools you have been given.\n\nRules:\n- Never create, complete or delete an item the user did not ask you to touch.\n- Before changing an existing item, list the items first: you do not know their ids.\n- When the user asks a general question about productivity, answer it. Do not touch their list.\n- Keep answers short. The list itself is on screen; do not read it back item by item.\n- When you summarise a stretch of time, wrap the summary in a card block:\n  <card title=\"...\">one line per day</card>\n  Put at most a sentence before the card.",
+    "voice": "You are the assistant inside a todo app, answering out loud. Same rules as the text assistant: never touch an item the user did not name, list before you change, and answer general questions without touching the list.\n\nYou are being spoken aloud, so be brief. One or two sentences. No lists, no markdown, no headings."
+  },
+
+  "tools": [
+    {
+      "type": "function",
+      "function": {
+        "name": "list_todos",
+        "description": "List the user's todo items, newest first. Returns id, title and done for each.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "filter": { "type": "string", "enum": ["all", "open", "done"], "description": "Which items to return." }
+          },
+          "required": []
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "add_todo",
+        "description": "Add a new item to the user's list.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "title": { "type": "string", "description": "The item, in the user's own words." },
+            "due": { "type": "string", "description": "ISO 8601 date, if the user gave one." }
+          },
+          "required": ["title"]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "complete_todo",
+        "description": "Mark one existing item done. Requires the item's id, so list_todos first if you do not have it.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "id": { "type": "integer", "description": "The id returned by list_todos." }
+          },
+          "required": ["id"]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "search_web",
+        "description": "Search the web for information that is not in the user's list.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "query": { "type": "string" }
+          },
+          "required": ["query"]
+        }
+      }
+    }
+  ],
+
+  "sampling": {
+    "temperature": 0.2,
+    "top_p": 0.95,
+    "max_tokens": 512
+  },
+
+  "toolChoice": "auto",
+
+  "envelopes": {
+    "card": {
+      "pattern": "<card\\b([^>]*)>([\\s\\S]*?)</card>",
+      "fields": {
+        "attrs": { "group": 1, "parse": "attributes" },
+        "body": { "group": 2 },
+        "lead": { "before": true }
+      }
+    }
+  },
+
+  "reasoning": {
+    "inlineTags": [["<think>", "</think>"]],
+    "leakPatterns": ["</?think>", "^\\s*(?:okay|alright),? (?:the user|i need to|let me think)"]
+  },
+
+  "primeUserMessage": "ok"
+}

@@ -1,0 +1,38 @@
+{
+  "name": "modelbake",
+  "version": "0.1.0",
+  "description": "Freeze your app's real contract, run your app's own cases against any OpenAI-compatible endpoint, and measure structural correctness plus honest warm-serving latency. Refuses to print numbers it cannot verify.",
+  "type": "module",
+  "bin": {
+    "modelbake": "bin/modelbake.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "files": [
+    "bin",
+    "src",
+    "examples",
+    "README.md",
+    "DESIGN.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node --test test/*.test.mjs"
+  },
+  "keywords": [
+    "llm",
+    "eval",
+    "benchmark",
+    "openai-compatible",
+    "prompt-cache",
+    "latency",
+    "tool-calling",
+    "local-llm",
+    "mlx",
+    "llama.cpp",
+    "vllm"
+  ],
+  "author": "Jack Warner",
+  "license": "MIT"
+}

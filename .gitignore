@@ -1,0 +1,10 @@
+node_modules/
+*.log
+.DS_Store
+
+# Run output. Results can embed your production system prompt and real case
+# content -- keep them out of git unless you have read them and decided.
+results/
+out/
+*.jsonl
+!test/fixtures/*.jsonl

@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "note": "Written before any candidate was run. Raising a number here after seeing a result defeats the point.",
+  "phase": "warm",
+  "structuralPassRate": 0.98,
+  "objectivePassRate": 0.9,
+  "latency": {
+    "firstVisibleMs": { "p50": 1500, "p90": 3000 },
+    "totalMs": { "p90": 20000 }
+  },
+  "requiredCases": ["complete-needs-lookup"],
+  "minSemanticDelta": 0.1
+}
