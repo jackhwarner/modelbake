@@ -3,7 +3,7 @@
 modelbake is a command-line tool that tests language models against your
 application's real prompt, tool schemas, and serving setup. You freeze the
 app's contract into a file, write test cases from the app's actual flows, and
-run the same cases against any OpenAI-compatible endpoint — a new checkpoint,
+run the same cases against any OpenAI-compatible endpoint: a new checkpoint,
 a different quantization, a config change. The report shows structural pass
 rates with each failure named, latency split into stages, and token-level
 cache accounting.
@@ -40,10 +40,10 @@ and check results against a bar file you wrote before running.
 
 ## Setup
 
-The hard part of a bakeoff is extracting your app's real contract — the final
+The hard part of a bakeoff is extracting your app's real contract: the final
 interpolated system prompt, the exact tool array, the production sampling
-values — out of your codebase. If you work with a coding agent (Claude Code,
-Codex, Cursor), that extraction is a job it can do with the repo in context:
+values. If you work with a coding agent (Claude Code, Codex, Cursor),
+that extraction is a job it can do with the repo in context:
 
 ```bash
 cd your-app
@@ -112,7 +112,7 @@ verification probe. It reads cached tokens from whichever usage field your
 server exposes and records which field it read.
 
 If verified coverage is ≥ 90% of the primed prefix, the lane runs warm, and
-each row is stamped `warmValid` from its own usage rather than the lane's —
+each row is stamped `warmValid` from its own usage rather than the lane's,
 so a mid-run cache eviction shows up as cold rows instead of skewing the warm
 percentiles. If the endpoint can't prove caching, the run proceeds as
 `cold_only` and `report` omits the warm section for that file.
@@ -124,7 +124,7 @@ Cached-token fields modelbake understands:
 | `usage.prompt_tokens_details.cached_tokens` | OpenAI, mlx_lm, llama.cpp, vLLM (needs `--enable-prompt-tokens-details`), SGLang (needs `return_cached_tokens_details`) | documented; measured on mlx_lm |
 | `timings.cache_n` | llama.cpp | documented |
 | `usage.prompt_cache_hit_tokens` | DeepSeek | documented |
-| `usage.cache_read_input_tokens` | Anthropic-shaped proxies | assumed, not verified — a run resolving here is flagged |
+| `usage.cache_read_input_tokens` | Anthropic-shaped proxies | assumed, not verified; a run resolving here is flagged |
 
 vLLM has open bugs where `prompt_tokens_details` stays null even with the
 flag enabled ([#44961](https://github.com/vllm-project/vllm/issues/44961),
@@ -214,7 +214,7 @@ A bar file records what "good enough" means, written before you see results:
 
 `report --bar bar.json` stamps the bar file's SHA-256 into the output and
 declares PASS, FAIL, or INCOMPLETE per criterion. A criterion this version
-cannot judge — `minSemanticDelta` needs human grading — returns NOT EVALUATED
+cannot judge (`minSemanticDelta` needs human grading) returns NOT EVALUATED
 and makes the verdict INCOMPLETE rather than defaulting to pass. `report`
 exits 1 on any FAIL, so a bar works as a CI gate.
 
@@ -257,7 +257,7 @@ output envelope, and a support bot with no tools. See
 - One round per case, no tool execution. modelbake sends one request and
   records the response; it does not run your tools and continue the loop. To
   test behavior after a tool result, put the assistant tool call and the tool
-  result into the case's `messages` — that matches what the model would see
+  result into the case's `messages`; that matches what the model would see
   in the real loop.
 - Run lanes against a dedicated offline server. Some servers honor the
   `model` field per request and will unload a live checkpoint to fetch the
