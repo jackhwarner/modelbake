@@ -3,7 +3,7 @@
 modelbake is a command-line tool that tests language models against your
 application's real prompt, tool schemas, and serving setup. You freeze the
 app's contract into a file, write test cases from the app's actual flows, and
-run the same cases against any OpenAI-compatible endpoint — a new checkpoint,
+run the same cases against any OpenAI-compatible endpoint: a new checkpoint,
 a different quantization, a config change. The report shows structural pass
 rates with each failure named, latency split into stages, and token-level
 cache accounting.
@@ -40,10 +40,10 @@ and check results against a bar file you wrote before running.
 
 ## Setup
 
-The hard part of a bakeoff is extracting your app's real contract — the final
+The hard part of a bakeoff is extracting your app's real contract: the final
 interpolated system prompt, the exact tool array, the production sampling
-values — out of your codebase. If you work with a coding agent (Claude Code,
-Codex, Cursor), that extraction is a job it can do with the repo in context:
+values. If you work with a coding agent (Claude Code, Codex, Cursor),
+that extraction is a job it can do with the repo in context:
 
 ```bash
 cd your-app
@@ -214,7 +214,7 @@ A bar file records what "good enough" means, written before you see results:
 
 `report --bar bar.json` stamps the bar file's SHA-256 into the output and
 declares PASS, FAIL, or INCOMPLETE per criterion. A criterion this version
-cannot judge — `minSemanticDelta` needs human grading — returns NOT EVALUATED
+cannot judge (`minSemanticDelta` needs human grading) returns NOT EVALUATED
 and makes the verdict INCOMPLETE rather than defaulting to pass. `report`
 exits 1 on any FAIL, so a bar works as a CI gate.
 
