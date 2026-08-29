@@ -3,6 +3,7 @@ import { loadContract } from '../contract.mjs';
 import { loadCases } from '../cases.mjs';
 import { openJsonl } from '../jsonl.mjs';
 import { streamCompletion, primeCompletion } from '../client.mjs';
+import { CACHE_FIELD_NAMES } from '../cache.mjs';
 import { extractEnvelopes } from '../envelopes.mjs';
 import { evaluateAssertion, describeAssertion, structuralGate } from '../assertions.mjs';
 import { UsageError, boolFlag, floatFlag, intFlag, requireFlags } from '../args.mjs';
@@ -201,7 +202,7 @@ export async function runCommand(flags) {
       console.log(`  verify-${variant}  cached=${probe.cachedTokens ?? 'none'} need>=${Math.round(need)}  ${ok ? 'OK' : 'FAIL'}${probe.cacheSource ? ` via ${probe.cacheSource}` : ''}`);
       if (!ok) {
         failures.push(probe.cachedTokens === null
-          ? `${variant}: endpoint reported no cached-token field (looked for prompt_tokens_details.cached_tokens, prompt_cache_hit_tokens, timings.cache_n, cache_read_input_tokens)`
+          ? `${variant}: endpoint reported no cached-token field (looked for ${CACHE_FIELD_NAMES.join(', ')})`
           : `${variant}: cached ${probe.cachedTokens} of a ${primeSizes[variant] ?? '?'}-token primed prefix, below the ${Math.round(coverage * 100)}% bar`);
       }
     }

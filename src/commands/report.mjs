@@ -14,6 +14,7 @@ const METRIC_LABEL = {
 };
 
 const rule = (char = '-') => char.repeat(72);
+const plural = (n, word) => `${n} ${word}${n === 1 ? '' : 's'}`;
 const fmtMs = (v) => (v === null || v === undefined ? '-' : `${v}ms`);
 
 function printLatencyBlock(title, block, indent = '  ') {
@@ -74,9 +75,9 @@ function printAnalysis(analysis, { maxFailures }) {
 
   console.log('');
   if (analysis.latency.warm) {
-    printLatencyBlock(`LATENCY  warm  (${analysis.latency.warm.rowCount} rows with verified cache coverage)`, analysis.latency.warm);
+    printLatencyBlock(`LATENCY  warm  (${plural(analysis.latency.warm.rowCount, 'row')} with verified cache coverage)`, analysis.latency.warm);
     if (analysis.warmInvalid) {
-      console.log(`  ${analysis.warmInvalid} warm-phase rows were EXCLUDED: their own usage did not show the primed prefix cached.`);
+      console.log(`  ${plural(analysis.warmInvalid, 'warm-phase row')} EXCLUDED: their own usage did not show the primed prefix cached.`);
     }
   } else {
     console.log('  LATENCY  warm   NOT MEASURED');
@@ -85,7 +86,7 @@ function printAnalysis(analysis, { maxFailures }) {
   }
   if (analysis.latency.cold) {
     console.log('');
-    printLatencyBlock(`LATENCY  cold  (${analysis.latency.cold.rowCount} rows, no verified cache)`, analysis.latency.cold);
+    printLatencyBlock(`LATENCY  cold  (${plural(analysis.latency.cold.rowCount, 'row')}, no verified cache)`, analysis.latency.cold);
   }
   if (analysis.coldDiagnostic) {
     const c = analysis.coldDiagnostic;

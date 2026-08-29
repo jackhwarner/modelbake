@@ -1,4 +1,4 @@
-import { copyFileSync, existsSync, mkdirSync, readFileSync } from 'node:fs';
+import { copyFileSync, existsSync, mkdirSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { boolFlag } from '../args.mjs';
@@ -47,8 +47,4 @@ export function initCommand(flags, positional) {
     console.log('');
   }
   return 0;
-}
-
-export function scaffoldText(name) {
-  return readFileSync(join(SCAFFOLD, name), 'utf8');
 }

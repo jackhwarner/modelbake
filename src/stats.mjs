@@ -22,15 +22,6 @@ export function summarize(values) {
   };
 }
 
-export function ratio(numerator, denominator) {
-  if (!denominator) return null;
-  return numerator / denominator;
-}
-
 export function pct(value, digits = 1) {
   return value === null || value === undefined ? '-' : `${(value * 100).toFixed(digits)}%`;
-}
-
-export function ms(value) {
-  return value === null || value === undefined ? '-' : `${Math.round(value)}ms`;
 }

@@ -22,10 +22,6 @@ export function sha256Json(value) {
   return sha256(JSON.stringify(canonicalize(value)));
 }
 
-export function shortSha(hex) {
-  return typeof hex === 'string' ? hex.slice(0, 12) : '-';
-}
-
 export function words(value) {
   return String(value ?? '').trim().split(/\s+/).filter(Boolean).length;
 }
@@ -46,7 +42,7 @@ export function isPlainObject(value) {
 // Deterministic PRNG so `blind` produces a stable, reproducible mapping from
 // the same inputs and seed. Math.random would make a grading run
 // unreproducible, which is the opposite of the point.
-export function mulberry32(seed) {
+function mulberry32(seed) {
   let a = seed >>> 0;
   return function next() {
     a += 0x6d2b79f5;
