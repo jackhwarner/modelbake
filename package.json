@@ -34,5 +34,13 @@
     "vllm"
   ],
   "author": "Jack Warner",
-  "license": "MIT"
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jackhwarner/modelbake.git"
+  },
+  "homepage": "https://github.com/jackhwarner/modelbake#readme",
+  "bugs": {
+    "url": "https://github.com/jackhwarner/modelbake/issues"
+  }
 }

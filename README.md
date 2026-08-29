@@ -22,6 +22,27 @@ endpoint cannot prove its prompt cache is being hit, the run is labelled
 
 ---
 
+## What a report looks like
+
+```
+  STRUCTURAL   18/20  90.0%
+     x arithmetic-no-tool.1  reasoning leaked into visible content
+  OBJECTIVE    38/44 checks  86.4%
+     x complete-needs-lookup.1  tool_called(list_todos)  actual complete_todo
+     x greeting.1  max_words(25)  actual 42 words
+  by category
+     tools               10/10     100.0%
+     restraint           8/12      66.7%
+  LATENCY  warm  (20 rows with verified cache coverage)
+```
+
+Named failures, not scores — you see *which case* broke and *how*. And the warm
+section only prints because every one of those 20 rows proved its cache
+coverage from its own usage payload. A champion-vs-challenger diff and a
+pre-committed `--bar` verdict sit on top of this.
+
+---
+
 ## Point your agent at this
 
 modelbake is agent-operated by design. You are probably reading this inside
